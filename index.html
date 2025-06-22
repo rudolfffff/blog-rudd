@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Прокачанный блог Руда</title>
+<style>
+  /* === В твоём оригинальном CSS — полностью без изменений === */
+  :root {
+    --bg-light: #f0f0f0;
+    --bg-dark: #121212;
+    --text-light: #121212;
+    --text-dark: #eee;
+    --accent-color: #00ffae;
+    --post-bg-light: #fff;
+    --post-bg-dark: #1e1e1e;
+    --button-bg-light: #00c885;
+    --button-bg-dark: #00ffae;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  body.light {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+  }
+  header {
+    background-color: var(--post-bg-dark);
+    color: var(--accent-color);
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  body.light header {
+    background-color: var(--post-bg-light);
+    color: var(--accent-color);
+    border-bottom: 2px solid #ccc;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+  }
+  .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+    border: 2px solid var(--accent-color);
+    object-fit: cover;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+  nav {
+    background-color: var(--post-bg-dark);
+    padding: 10px;
+    text-align: center;
+    margin-top: 10px;
+    border-bottom: 2px solid #333;
+  }
+  body.light nav {
+    background-color: var(--post-bg-light);
+    border-bottom: 2px solid #ccc;
+  }
+  nav a {
+    margin: 0 15px;
+    color: inherit;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  nav a:hover {
+    color: var(--accent-color);
+  }
+  .container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  .post, .about, .contact {
+    background-color: var(--post-bg-dark);
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgb(0 0 0 / 0.4);
+    transition: background-color 0.3s;
+  }
+  body.light .post, body.light .about, body.light .contact {
+    background-color: var(--post-bg-light);
+    box-shadow: 0 0 15px rgb(0 0 0 / 0.1);
+  }
+  .post h2 {
+    margin-top: 0;
+    color: var(--accent-color);
+  }
+  .post .date {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 10px;
+  }
+  .post img, .post video {
+    max-width: 100%;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+  .post .buttons {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  button {
+    background-color: var(--button-bg-dark);
+    border: none;
+    color: #000;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  body.light button {
+    background-color: var(--button-bg-light);
+    color: #000;
+  }
+  button:hover {
+    background-color: #00d68a;
+  }
+  input[type="text"], textarea, select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #f00;
+    font-size: 1rem;
+  }
+  input[type="file"] {
+    margin-bottom: 10px;
+  }
+  .add-post-btn {
+    margin-bottom: 20px;
+  }
+  .hidden {
+    display: none !important;
+  }
+  .like-btn {
+    background-color: #ff4081;
+    color: white;
+  }
+  .like-btn.liked {
+    background-color: #e91e63;
+  }
+  .dislike-btn {
+    background-color: #607d8b;
+    color: white;
+  }
+  .dislike-btn.disliked {
+    background-color: #455a64;
+  }
+  #searchInput {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 100%;
+  }
+  .post {
+    animation: fadeIn 0.5s ease forwards;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity:1; transform: translateY(0);}
+  }
+  .comment-form {
+    margin-top: 10px;
+  }
+  .comment-input {
+    width: calc(100% - 90px);
+    padding:5px;
+    border-radius:4px;
+    border:1px solid #ccc;
+  }
+  .comment-btn {
+    padding:5px 10px;
+    margin-left:5px;
+    background-color:#00c885;
+    color:#000;
+    border:none;
+    cursor:pointer;
+  }
+  .comments p {
+    background: rgba(255,255,255,0.1);
+    padding:5px;
+    border-radius:4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .comment-delete {
+    background: none;
+    border: none;
+    color: #f55;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .delete-btn {
+    background-color: #ff5555;
+    color: white;
+  }
+  .delete-btn:hover {
+    background-color: #ff0000;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <img src="/mnt/data/photo_2025-06-21_17-37-26.jpg" alt="Аватар" class="avatar" />
+    <div>
+      <h1>Блог Руда</h1>
+      <p>15 лет | Люблю писать и играть</p>
+    </div>
+  </div>
+  <button id="themeToggleBtn" title="Переключить тему">🌙</button>
+</header>
+
+<nav>
+  <a href="#" data-section="posts">Главная</a>
+  <a href="#" data-section="about">Обо мне</a>
+  <a href="#" data-section="contact">Контакты</a>
+</nav>
+
+<div class="container">
+  <input type="text" id="searchInput" placeholder="Поиск по постам..." />
+  <select id="categoryFilter">
+    <option value="all">Все категории</option>
+    <option value="Игры">Игры</option>
+    <option value="Еда">Еда</option>
+    <option value="Жизнь">Жизнь</option>
+  </select>
+  <button class="add-post-btn" id="showAddPostFormBtn">➕ Добавить пост</button>
+  <div id="addPostForm" class="hidden">
+    <input type="password" id="postPassword" placeholder="Введите пароль" />
+    <input type="text" id="postTitle" placeholder="Заголовок" />
+    <textarea id="postContent" rows="4" placeholder="Текст поста"></textarea>
+    <select id="postCategory">
+      <option value="" disabled selected>Выберите категорию</option>
+      <option value="Игры">Игры</option>
+      <option value="Еда">Еда</option>
+      <option value="Жизнь">Жизнь</option>
+    </select>
+    <input type="file" id="postMedia" accept="image/*,video/*" />
+    <button id="addPostBtn">Добавить</button>
+    <button id="cancelAddPostBtn">Отмена</button>
+  </div>
+
+  <div id="posts"></div>
+
+  <div id="about" class="about hidden">
+    <h2>Обо мне</h2>
+    <p>Привет! Меня зовут Руд, мне 15 лет. Я люблю писать, играть в игры и делиться мыслями в этом блоге.</p>
+    <div class="social-links">
+      <a href="https://t.me/rud_official" target="_blank">📲</a>
+      <a href="https://instagram.com/rud" target="_blank">📸</a>
+      <a href="https://youtube.com/rud" target="_blank">▶️</a>
+    </div>
+  </div>
+
+  <div id="contact" class="contact hidden">
+    <h2>Контакты</h2>
+    <p>Напиши мне в Telegram: <strong>@rud_official</strong></p>
+    <p>Или на почту: <strong>rudblog@example.com</strong></p>
+  </div>
+</div>
+
+<footer>&copy; 2025 Блог Руда. Все права защищены.</footer>
+
+<!-- Firebase JS -->
+<script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore-compat.js"></script>
+
+<script>
+  // === Firebase init ===
+  const firebaseConfig = {
+    apiKey: "AIzaSyCgGD5HJbROQfW3RRQGnSSxL2UGp7mLpVE",
+    authDomain: "rudblog-70105.firebaseapp.com",
+    projectId: "rudblog-70105",
+    storageBucket: "rudblog-70105.appspot.com",
+    messagingSenderId: "700491091501",
+    appId: "1:700491091501:web:2581cec02798e130eb72a4",
+    measurementId: "G-DE4SBJB21P"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // === UI логика ===
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const body = document.body;
+  function setTheme(theme) {
+    if (theme === 'light') {
+      body.classList.add('light');
+      themeToggleBtn.textContent = '🌙';
+      localStorage.setItem('theme','light');
+    } else {
+      body.classList.remove('light');
+      themeToggleBtn.textContent = '☀️';
+      localStorage.setItem('theme','dark');
+    }
+  }
+  themeToggleBtn.onclick = () => setTheme(body.classList.contains('light') ? 'dark' : 'light');
+  setTheme(localStorage.getItem('theme')||'dark');
+
+  const navLinks = document.querySelectorAll('nav a');
+  const sections = {
+    posts: document.getElementById('posts'),
+    about: document.getElementById('about'),
+    contact: document.getElementById('contact')
+  };
+  navLinks.forEach(link => {
+    link.onclick = e => {
+      e.preventDefault();
+      const sec = link.dataset.section;
+      for (let s in sections) sections[s].classList.add('hidden');
+      sections[sec].classList.remove('hidden');
+      const show = sec === 'posts';
+      document.getElementById('searchInput').style.display = show?'block':'none';
+      document.getElementById('categoryFilter').style.display = show?'block':'none';
+      document.getElementById('showAddPostFormBtn').style.display = show?'inline-block':'none';
+      document.getElementById('cancelAddPostBtn').click();
+    };
+  });
+
+  const postsDiv          = document.getElementById('posts');
+  const showAdd           = document.getElementById('showAddPostFormBtn');
+  const form              = document.getElementById('addPostForm');
+  const addPostBtn        = document.getElementById('addPostBtn');
+  const cancelAdd         = document.getElementById('cancelAddPostBtn');
+  const postPassword      = document.getElementById('postPassword');
+  const postTitleInput    = document.getElementById('postTitle');
+  const postContentInput  = document.getElementById('postContent');
+  const postMediaInput    = document.getElementById('postMedia');
+  const postCategorySelect= document.getElementById('postCategory');
+  const searchInput       = document.getElementById('searchInput');
+  const categoryFilter    = document.getElementById('categoryFilter');
+
+  let posts = [];
+
+  // Подписка на обновления Firestore
+  db.collection('posts').orderBy('date','desc').onSnapshot(snapshot => {
+    posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderPosts();
+  });
+
+  function renderPosts(){
+    postsDiv.innerHTML = '';
+    const term = searchInput.value.toLowerCase();
+    const cat  = categoryFilter.value;
+    posts.forEach((p,i) => {
+      if ((cat==='all'||p.category===cat) &&
+         (p.title.toLowerCase().includes(term) ||
+          p.content.toLowerCase().includes(term))) {
+
+        let mediaHTML = '';
+        if (p.media){
+          mediaHTML = p.media.type.startsWith('image/') ?
+            `<img src="${p.media.data}"/>` :
+            `<video controls src="${p.media.data}"></video>`;
+        }
+
+        const commentsHTML = (p.comments||[]).map((c,ci)=>
+          `<p>💬 ${c} <button class="comment-delete" data-post="${i}" data-comment="${ci}">✖</button></p>`
+        ).join('');
+
+        postsDiv.insertAdjacentHTML('beforeend', `
+          <div class="post" style="animation-delay:${i*0.1}s">
+            <h2>${p.title}</h2>
+            <div class="date">${p.date}</div>
+            <p>${p.content}</p>${mediaHTML}
+            <div class="buttons">
+              <button class="like-btn ${p.liked?'liked':''}" data-index="${i}">❤ ${p.likes||0}</button>
+              <button class="dislike-btn ${p.disliked?'disliked':''}" data-index="${i}">👎 ${p.dislikes||0}</button>
+              <button class="delete-btn" data-index="${i}">Удалить</button>
+            </div>
+            <div class="comment-form">
+              <input type="text" class="comment-input" placeholder="Комментарий..." data-index="${i}"/>
+              <button class="comment-btn" data-index="${i}">💬</button>
+            </div>
+            <div class="comments">${commentsHTML}</div>
+          </div>`);
+      }
+    });
+
+    // Навешиваем события
+    document.querySelectorAll('.like-btn').forEach(b => {
+      b.onclick = () => {
+        const i = +b.dataset.index;
+        const p = posts[i];
+        const upd = {
+          liked: !p.liked,
+          likes: (p.likes||0) + (p.liked ? -1 : 1)
+        };
+        db.collection('posts').doc(p.id).update(upd);
+      };
+    });
+
+    document.querySelectorAll('.dislike-btn').forEach(b => {
+      b.onclick = () => {
+        const i = +b.dataset.index;
+        const p = posts[i];
+        const newState = !p.disliked;
+        const delta = newState ? 1 : -1;
+        db.collection('posts').doc(p.id).update({
+          disliked: newState,
+          dislikes: (p.dislikes||0) + delta
+        });
+      };
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(b => {
+      b.onclick = () => {
+        const i = +b.dataset.index;
+        const p = posts[i];
+        db.collection('posts').doc(p.id).delete();
+      };
+    });
+
+    document.querySelectorAll('.comment-btn').forEach(b => {
+      b.onclick = () => {
+        const i = +b.dataset.index;
+        const p = posts[i];
+        const inp = document.querySelector(`.comment-input[data-index="${i}"]`);
+        const txt = inp.value.trim();
+        if (txt){
+          const updated = [...(p.comments||[]), txt];
+          db.collection('posts').doc(p.id).update({ comments: updated });
+        }
+      };
+    });
+
+    document.querySelectorAll('.comment-delete').forEach(btn => {
+      btn.onclick = () => {
+        const pi = +btn.dataset.post;
+        const ci = +btn.dataset.comment;
+        const p = posts[pi];
+        const arr = [...(p.comments||[])];
+        arr.splice(ci, 1);
+        db.collection('posts').doc(p.id).update({ comments: arr });
+      };
+    });
+  }
+
+  // Управление формой
+  showAdd.onclick = () => {
+    form.classList.remove('hidden');
+    showAdd.style.display = 'none';
+  };
+  cancelAdd.onclick = () => {
+    form.classList.add('hidden');
+    showAdd.style.display = 'inline-block';
+    postPassword.value = '';
+    postTitleInput.value = '';
+    postContentInput.value = '';
+    postCategorySelect.value = '';
+    postMediaInput.value = '';
+  };
+
+  addPostBtn.onclick = () => {
+    const pass = postPassword.value.trim();
+    if (pass !== 'hayastxer') {
+      alert('Неверный пароль');
+      return;
+    }
+    const t = postTitleInput.value.trim();
+    const c = postContentInput.value.trim();
+    const cat = postCategorySelect.value;
+    if (!t || !c || !cat){
+      alert('Заполни заголовок, текст и категорию');
+      return;
+    }
+    const f = postMediaInput.files[0];
+    const onadd = media => {
+      db.collection('posts').add({
+        title: t,
+        content: c,
+        category: cat,
+        media,
+        date: new Date().toLocaleDateString('ru-RU'),
+        likes:0, liked:false,
+        dislikes:0, disliked:false,
+        comments:[]
+      });
+      cancelAdd.click();
+    };
+    if (f) {
+      const reader = new FileReader();
+      reader.onload = e => onadd({ data: e.target.result, type: f.type });
+      reader.readAsDataURL(f);
+    } else onadd(null);
+  };
+
+  searchInput.oninput = renderPosts;
+  categoryFilter.onchange = renderPosts;
+
+</script>
+</body>
+</html>
